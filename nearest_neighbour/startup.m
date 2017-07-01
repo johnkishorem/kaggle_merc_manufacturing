@@ -13,4 +13,7 @@ X_cv = X((train_len +1) : train_len + cv_len, :); y_cv = y((train_len +1) : trai
 X_test = X((cv_len +1) : cv_len + test_len, :); y_test = y((cv_len +1) : cv_len + test_len);
 
 %% Mean of K nearest neighbour
-%% predict = find_nearest_neighbour(X_train, X_cv, k);
+k = 5;
+k_nearest_neighbours = find_nearest_neighbours(X_train, X_test(1,:), k);
+mean_k_nn = sum(y(k_nearest_neighbours));
+mean_k_nn = mean_k_nn / k;

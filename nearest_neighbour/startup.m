@@ -42,7 +42,20 @@ squared_error = (y_test - mean_k_nn) .^ 2;
 mean_error = sum(squared_error) / test_len;
 root_mean_square = mean_error ^ 0.5
 
-%% Mean of K nearest neighbour
-k_nearest_neighbours = find_nearest_neighbours(X_train, X_test(1,:), k);
-mean_k_nn = sum(y(k_nearest_neighbours));
-mean_k_nn = mean_k_nn / k;
+%% Apply K nearest neighbour on submission set
+test_X = removeCategory(test(:, 2:end), feature_type);
+test_X_help = applyCategory(test(:, 2:end), feature_type, no_categories, categories);
+test_X = [test_X test_X_help];
+[test_m, test_n] = size(test_X);
+test_y = zeros(test_m,1);
+k = 40; %%value obtained from the lease rms erros in cv set
+for i = 1:test_m
+    fprintf('Predicting for %dth element in test set\n',i);
+    k_nearest_neighbours = find_nearest_neighbours(X, test_X(i,:), k);
+    sum_help = sum(y(k_nearest_neighbours));
+    test_y(i) = sum_help / k;
+end
+test_y = [cell2mat(test(:,1)) test_y];
+
+%% Store the result to a csv file
+csvwrite('submit.csv',test_y);

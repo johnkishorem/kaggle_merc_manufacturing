@@ -41,4 +41,20 @@ end
 plot(1:numel(error_history),error_history);
 
 %% apply kernel regression on submission
-lambda = 8 %%Value choosen based on CV
+test_X = removeCategory(test(:, 2:end), feature_type);
+test_X_help = applyCategory(test(:, 2:end), feature_type, no_categories, categories);
+test_X = [test_X test_X_help];
+[test_m, test_n] = size(test_X);
+test_y = zeros(test_m,1);
+lambda = 8; %%Value choosen based on CV
+for i = 1 : test_m
+    distance_from_train = find_distance(X, test_X(i,:));
+    weights = epanechnikov_kernel(distance_from_train,lambda);
+    sum_weights = sum(weights);
+    weighted_prediction = sum(weights .* y);
+    test_y(i) = weighted_prediction/sum_weights;
+end
+test_y = [cell2mat(test(:,1)) test_y];
+
+%% Store the result to a csv file
+csvwrite('submit.csv',test_y);

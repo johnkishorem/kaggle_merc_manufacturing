@@ -13,7 +13,7 @@ X_cv = X((train_len +1) : train_len + cv_len, :); y_cv = y((train_len +1) : trai
 X_test = X((cv_len +1) : cv_len + test_len, :); y_test = y((cv_len +1) : cv_len + test_len);
 
 %% Using CV to select a value for K
-count = 10;
+count = 300;
 error_history = zeros(count,1);
 for iter = 1:count
     fprintf('\nRunning nearest neighbout with %d neighbours',iter);
@@ -29,10 +29,10 @@ for iter = 1:count
     root_mean_square = mean_error ^ 0.5;
     error_history(iter) = root_mean_square;
 end
-plot(error_history,1:numel(error_history));
+plot(1:numel(error_history),error_history);
 
 %% Error on test set
-k = 1;
+k = 40; %%value obtained from the lease rms erros in cv set
 for i = 1:test_len
     k_nearest_neighbours = find_nearest_neighbours(X_train, X_test(i,:), k);
     sum_help = sum(y(k_nearest_neighbours));

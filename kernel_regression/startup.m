@@ -45,6 +45,7 @@ test_y = zeros(test_m,1);
 %lambda = 8; %% Value choosen based on CV 
 lambda = 6; %% Values choose based on CV for gaussian
 for i = 1 : test_m
+    fprintf('Working on test element %d\n',i);
     distance_from_train = find_distance(X, test_X(i,:));
     weights = gaussian_kernel(distance_from_train,lambda);
     sum_weights = sum(weights);

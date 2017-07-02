@@ -39,3 +39,6 @@ for iter = start_count:count
     error_history(iter - start_count + 1) = root_mean_squared_error;
 end
 plot(1:numel(error_history),error_history);
+
+%% apply kernel regression on submission
+lambda = 8 %%Value choosen based on CV

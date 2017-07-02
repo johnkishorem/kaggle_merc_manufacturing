@@ -17,21 +17,17 @@ X_test = X((cv_len +1) : cv_len + test_len, :); y_test = y((cv_len +1) : cv_len 
 count = 30;
 start_count = 1;
 clear error_history;
-error_history = zeros(iter - start_count + 1,1);
+error_history = zeros(count - start_count + 1,1);
 for iter = start_count:count
     fprintf('Calculating at lambda = %d\n',iter);
     lambda = iter;
     prediction = zeros(cv_len,1);
     for i = 1 : cv_len
         distance_from_train = find_distance(X_train, X_cv(i,:));
-        weights = epanechnikov_kernel(distance_from_train,lambda);
+        weights = gaussian_kernel(distance_from_train,lambda);
         sum_weights = sum(weights);
         weighted_prediction = sum(weights .* y_train);
-        if sum_weights == 0
-            prediction(i) = 100000;
-        else
-            prediction(i) = weighted_prediction/sum_weights;
-        end
+        prediction(i) = weighted_prediction/sum_weights;
     end
     squared_error = (prediction - y_cv) .^ 2;
     mean_error = sum(squared_error) / cv_len;
@@ -46,7 +42,8 @@ test_X_help = applyCategory(test(:, 2:end), feature_type, no_categories, categor
 test_X = [test_X test_X_help];
 [test_m, test_n] = size(test_X);
 test_y = zeros(test_m,1);
-lambda = 8; %%Value choosen based on CV
+%lambda = 8; %% Value choosen based on CV 
+lambda = 6; %% Values choose based on CV for gaussian
 for i = 1 : test_m
     distance_from_train = find_distance(X, test_X(i,:));
     weights = gaussian_kernel(distance_from_train,lambda);
